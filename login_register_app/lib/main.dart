@@ -1,15 +1,35 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_locales/flutter_locales.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:login_register_app/screen/HomeScreen.dart';
 import 'package:login_register_app/service/Auth.dart';
+import 'package:login_register_app/service/Transection_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:login_register_app/screen/LoginScreen.dart';
 
-void main() {
-  runApp(ChangeNotifierProvider(
-    create: (BuildContext context) => AuthProvider(),
-    child: MyApp(),
-  ));
+// void main() {
+//   runApp(ChangeNotifierProvider(
+//     create: (BuildContext context) => AuthProvider(),
+//     child: MyApp(),
+//   ));
+// }
+
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Locales.init(['en', 'lo']);
+  runApp(
+    /// Providers are above [MyApp] instead of inside it, so that tests
+    /// can use [MyApp] while mocking the providers
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(
+            create: (BuildContext context) => AuthProvider()),
+        ChangeNotifierProvider(
+            create: (BuildContext context) => TransectionProvider()),
+      ],
+      child: const MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatefulWidget {
@@ -37,24 +57,28 @@ class _MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'MyApp',
-      home: Scaffold(
-        body: Center(
-          child: Consumer<AuthProvider>(
-            builder: (context, auth, child) {
-              switch (auth.isAuthenticated) {
-                case true:
-                  return HomeScreen();
-                default:
-                  return LoginScreen();
-              }
-            },
+    return LocaleBuilder(
+      builder: (locale) => MaterialApp(
+        localizationsDelegates: Locales.delegates,
+        supportedLocales: Locales.supportedLocales,
+        locale: locale,
+        home: Scaffold(
+          body: Center(
+            child: Consumer<AuthProvider>(
+              builder: (context, auth, child) {
+                switch (auth.isAuthenticated) {
+                  case true:
+                    return HomeScreen();
+                  default:
+                    return LoginScreen();
+                }
+              },
+            ),
           ),
         ),
+        debugShowCheckedModeBanner: false,
+        theme: ThemeData(primarySwatch: Colors.blue),
       ),
-      debugShowCheckedModeBanner: false,
-      theme: ThemeData(primarySwatch: Colors.blue),
     );
   }
 }

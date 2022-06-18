@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:login_register_app/screen/RegisterScreen.dart';
 import 'package:login_register_app/service/Auth.dart';
 import 'package:provider/provider.dart';
 
@@ -45,10 +46,9 @@ class _LoginScreenState extends State<LoginScreen> {
               height: 20,
             ),
             TextFormField(
-              autofocus: true,
               validator: (String? value) {
                 if (value!.isEmpty) {
-                  return 'ກະລຸນາປ້ອນຂໍ້ມູນ';
+                  return 'ກະລຸນາປ້ອນອີເມວລ໌';
                 }
               },
               onSaved: (value) => _email = value!,
@@ -84,26 +84,47 @@ class _LoginScreenState extends State<LoginScreen> {
               obscureText: true,
             ),
             SizedBox(height: 20.0),
-            Container(
-              alignment: Alignment(1.0, 0.0),
-              padding: EdgeInsets.only(top: 15.0, left: 15.0),
-              child: InkWell(
-                onTap: () {
-                  // Navigator.push(
-                  //     context,
-                  //     new MaterialPageRoute(
-                  //       builder: (BuildContext context) =>
-                  //           new ResetPasswordPage(title: 'Reset Password'),
-                  //     ));
-                },
-                child: const Text(
-                  'ລຶມລະຫັດຜ່ານ?',
-                  style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      color: Colors.blue,
-                      decoration: TextDecoration.underline),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: <Widget>[
+                Column(
+                  children: <Widget>[
+                    Container(
+                      child: InkWell(
+                        onTap: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => RegisterScreen()));
+                        },
+                        child: const Text(
+                          'ບໍ່ມີບັນຊີ, ລົງທະບຽນໃໝ່',
+                          style: TextStyle(
+                              fontSize: 14,
+                              color: Colors.blue,
+                              fontWeight: FontWeight.bold),
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
-              ),
+                Column(
+                  children: <Widget>[
+                    Container(
+                      child: InkWell(
+                        onTap: () {},
+                        child: const Text(
+                          'ລືມລະຫັດຜ່ານ?',
+                          style: TextStyle(
+                              fontSize: 14,
+                              color: Colors.blue,
+                              fontWeight: FontWeight.bold),
+                        ),
+                      ),
+                    )
+                  ],
+                ),
+              ],
             ),
             Padding(
               padding: const EdgeInsets.fromLTRB(0.0, 16.0, 0.0, 0.0),

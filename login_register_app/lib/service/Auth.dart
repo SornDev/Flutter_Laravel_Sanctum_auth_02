@@ -1,3 +1,4 @@
+//import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:device_info/device_info.dart';
 import 'dart:io';
@@ -42,6 +43,32 @@ class AuthProvider extends ChangeNotifier {
     }
 
     return false;
+  }
+
+  Future<bool> register(name, email, password) async {
+    Map creds = {
+      'email': email,
+      'password': password,
+      'name': name,
+    };
+
+    final response = await dio().post('/register',
+        data: creds, options: Options(validateStatus: ((status) => true)));
+
+    Map<String, dynamic> dcode = response.data;
+    print('response: ${dcode['success']}');
+
+    if (dcode['success'] == true) {
+      // String token = response.data.toString();
+      // await saveToken(token);
+      // this._token = token;
+      // getToken(token: token);
+      // _isAuthenticated = true;
+      // notifyListeners();
+      return true;
+    } else {
+      return false;
+    }
   }
 
   getDeviceId() async {
